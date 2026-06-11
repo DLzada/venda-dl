@@ -1,4 +1,4 @@
-package com.daniel.loja_dl_api.dominio.model;
+package com.daniel.loja_dl_api.domain.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
