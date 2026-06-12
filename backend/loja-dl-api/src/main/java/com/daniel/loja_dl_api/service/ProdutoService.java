@@ -22,8 +22,8 @@ public class ProdutoService {
 
     @Transactional
     public ProdutoResponseDTO criar(ProdutoRequestDTO requestDTO){
-        Categoria categoria = categoriaRepository.findById(requestDTO.getId())
-                .orElseThrow(()-> new RuntimeException("Categoria não existe!"));
+        Categoria categoria = categoriaRepository.findById(requestDTO.getCategoriaId())
+                .orElseThrow(() -> new RuntimeException("Categoria não encontrada..."));
 
         Produto produto = new Produto();
         produto.setNome(requestDTO.getNome());

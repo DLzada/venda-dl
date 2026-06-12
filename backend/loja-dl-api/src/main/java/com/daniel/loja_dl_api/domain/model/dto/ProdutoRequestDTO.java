@@ -30,5 +30,5 @@ public class ProdutoRequestDTO {
     private Integer quantidadeEstoque;
 
     @NotNull(message = "O id da categoria é obrigatório!")
-    private Long id;
+    private Long categoriaId;
 }
