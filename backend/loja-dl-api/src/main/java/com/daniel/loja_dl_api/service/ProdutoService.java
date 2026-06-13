@@ -38,13 +38,25 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    @GetMapping
     public List<ProdutoResponseDTO> listarTodos(){
         return produtoRepository.findAll().stream()
                 .map(this::converterParaResponse)
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public List<ProdutoResponseDTO> listarPorId(Long categoriaID){
+        return produtoRepository.findByCategoriaId(categoriaID).stream()
+                .map(this::converterParaResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProdutoResponseDTO> listarPorNome(String nome){
+        return produtoRepository.findByNomeContainingIgnoreCase(nome).stream()
+                .map(this::converterParaResponse)
+                .collect(Collectors.toList());
+    }
 
     private ProdutoResponseDTO converterParaResponse(Produto produto){
         return new ProdutoResponseDTO(
