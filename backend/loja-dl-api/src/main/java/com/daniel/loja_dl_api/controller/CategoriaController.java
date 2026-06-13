@@ -2,6 +2,7 @@ package com.daniel.loja_dl_api.controller;
 
 import com.daniel.loja_dl_api.domain.model.dto.CategoriaRequestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.CategoriaResponseDTO;
+import com.daniel.loja_dl_api.domain.model.dto.ProdutoResponseDTO;
 import com.daniel.loja_dl_api.service.CategoriaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

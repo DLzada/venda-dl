@@ -28,4 +28,16 @@ public class ProdutoController {
         List<ProdutoResponseDTO> lista = produtoService.listarTodos();
         return ResponseEntity.ok(lista);
     }
+
+    @GetMapping("/filtrar-categoria")
+    public ResponseEntity<List<ProdutoResponseDTO>> filtrarPorCategoria(@RequestParam Long categoriaId){
+        List<ProdutoResponseDTO> lista = produtoService.buscarPorCategoria(categoriaId);
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ProdutoResponseDTO>> buscar(@RequestParam String nome){
+        List<ProdutoResponseDTO> lista = produtoService.buscarPorNome(nome);
+        return ResponseEntity.ok(lista);
+    }
 }

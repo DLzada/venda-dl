@@ -45,14 +45,14 @@ public class ProdutoService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponseDTO> listarPorId(Long categoriaID){
+    public List<ProdutoResponseDTO> buscarPorCategoria(Long categoriaID){
         return produtoRepository.findByCategoriaId(categoriaID).stream()
                 .map(this::converterParaResponse)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<ProdutoResponseDTO> listarPorNome(String nome){
+    public List<ProdutoResponseDTO> buscarPorNome(String nome){
         return produtoRepository.findByNomeContainingIgnoreCase(nome).stream()
                 .map(this::converterParaResponse)
                 .collect(Collectors.toList());
