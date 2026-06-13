@@ -1,5 +1,6 @@
 package com.daniel.loja_dl_api.domain.model;
 
+import com.daniel.loja_dl_api.domain.model.dto.ItemPedido;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
