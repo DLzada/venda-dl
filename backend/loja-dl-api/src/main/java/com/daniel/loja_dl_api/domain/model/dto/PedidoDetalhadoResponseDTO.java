@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProdutoDetalhadoDTO {
+public class PedidoDetalhadoResponseDTO {
     private Long id;
     private LocalDateTime dataPedido;
     private BigDecimal valorTotal;

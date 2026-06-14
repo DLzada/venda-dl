@@ -3,10 +3,7 @@ package com.daniel.loja_dl_api.service;
 import com.daniel.loja_dl_api.domain.model.Pedido;
 import com.daniel.loja_dl_api.domain.model.Produto;
 import com.daniel.loja_dl_api.domain.model.StatusPedido;
-import com.daniel.loja_dl_api.domain.model.dto.ItemCompraResquestDTO;
-import com.daniel.loja_dl_api.domain.model.dto.ItemPedido;
-import com.daniel.loja_dl_api.domain.model.dto.PedidoRequestDTO;
-import com.daniel.loja_dl_api.domain.model.dto.PedidoResponseDTO;
+import com.daniel.loja_dl_api.domain.model.dto.*;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,6 +61,41 @@ public class PedidoService {
                 pedido.getDataPedido(),
                 pedido.getValorTotal(),
                 pedido.getStatus().name()
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<PedidoResponseDTO> listarTodos(){
+        return pedidoRepository.findAll().stream()
+                .map(pedido -> new PedidoResponseDTO(
+                        pedido.getId(),
+                        pedido.getDataPedido(),
+                        pedido.getValorTotal(),
+                        pedido.getStatus().name()
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public PedidoDetalhadoResponseDTO buscarPorId(Long id){
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("O pedido com ID: " + id + " não foi encontrado!"));
+
+        List<ItemPedidoResponseDTO> itensDTO = pedido.getItens().stream()
+                .map(item -> new ItemPedidoResponseDTO(
+                        item.getProduto().getId(),
+                        item.getProduto().getNome(),
+                        item.getQuantidade(),
+                        item.getPrecoUnitario()
+                ))
+                .toList();
+
+        return new PedidoDetalhadoResponseDTO(
+                pedido.getId(),
+                pedido.getDataPedido(),
+                pedido.getValorTotal(),
+                pedido.getStatus().name(),
+                itensDTO
         );
     }
 }
