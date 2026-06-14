@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ItemCompraResquestDTO {
 
     @NotNull(message = "O ID do produto é obrigatorio")
-    private Long id;
+    private Long produtoId;
 
     @NotNull(message = "É necessário informar uma quantidade!")
     @Positive(message = "A quantidade precisa ser maior que zero")

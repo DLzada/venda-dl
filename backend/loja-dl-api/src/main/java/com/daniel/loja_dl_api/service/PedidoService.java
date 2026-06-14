@@ -34,7 +34,7 @@ public class PedidoService {
         List<ItemPedido> itensPedido = new ArrayList<>();
 
         for(ItemCompraResquestDTO itemDTO : request.getItens()){
-            Produto produto = produtoRepository.findById(itemDTO.getId())
+            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
                     .orElseThrow(()-> new RuntimeException("Produto não encontrado"));
 
             if(produto.getQuantidadeEstoque() < itemDTO.getQuantidade()){
