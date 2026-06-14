@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PedidoController {
     private final PedidoService pedidoService;
 
-    @PostMapping
+    @PostMapping("/checkout")
     public ResponseEntity<PedidoResponseDTO> efetuarCheckout(@RequestBody @Valid PedidoRequestDTO request){
         PedidoResponseDTO responseDTO = pedidoService.finalizarCompra(request);
-        ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 }
