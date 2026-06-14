@@ -6,6 +6,8 @@ import com.daniel.loja_dl_api.domain.model.StatusPedido;
 import com.daniel.loja_dl_api.domain.model.dto.*;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
+import com.daniel.loja_dl_api.infra.exception.BusinessException;
+import com.daniel.loja_dl_api.infra.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +35,10 @@ public class PedidoService {
 
         for(ItemCompraResquestDTO itemDTO : request.getItens()){
             Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
-                    .orElseThrow(()-> new RuntimeException("Produto não encontrado"));
+                    .orElseThrow(()-> new EntityNotFoundException("Produto não encontrado"));
 
             if(produto.getQuantidadeEstoque() < itemDTO.getQuantidade()){
-                throw new RuntimeException("Estoque insuficiente para o produto selecionado: " + produto.getNome() + ". Estoque Atual: " + produto.getQuantidadeEstoque());
+                throw new BusinessException("Estoque insuficiente para o produto selecionado: " + produto.getNome() + ". Estoque Atual: " + produto.getQuantidadeEstoque());
             }
 
             produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - itemDTO.getQuantidade());
@@ -79,7 +81,7 @@ public class PedidoService {
     @Transactional(readOnly = true)
     public PedidoDetalhadoResponseDTO buscarPorId(Long id){
         Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("O pedido com ID: " + id + " não foi encontrado!"));
+                .orElseThrow(()-> new EntityNotFoundException("O pedido com ID: " + id + " não foi encontrado!"));
 
         List<ItemPedidoResponseDTO> itensDTO = pedido.getItens().stream()
                 .map(item -> new ItemPedidoResponseDTO(
