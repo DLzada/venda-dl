@@ -1,6 +1,6 @@
 package com.daniel.loja_dl_api.service;
 
-import com.daniel.loja_dl_api.domain.model.Categoria;
+import com.daniel.loja_dl_api.domain.model.entity.Categoria;
 import com.daniel.loja_dl_api.domain.model.dto.CategoriaRequestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.CategoriaResponseDTO;
 import com.daniel.loja_dl_api.domain.repository.CategoriaRepository;

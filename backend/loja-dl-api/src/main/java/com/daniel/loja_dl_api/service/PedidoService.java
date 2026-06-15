@@ -1,7 +1,7 @@
 package com.daniel.loja_dl_api.service;
 
-import com.daniel.loja_dl_api.domain.model.Pedido;
-import com.daniel.loja_dl_api.domain.model.Produto;
+import com.daniel.loja_dl_api.domain.model.entity.Pedido;
+import com.daniel.loja_dl_api.domain.model.entity.Produto;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
 import com.daniel.loja_dl_api.domain.model.dto.*;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;

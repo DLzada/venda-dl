@@ -1,7 +1,7 @@
 package com.daniel.loja_dl_api.service;
 
-import com.daniel.loja_dl_api.domain.model.Categoria;
-import com.daniel.loja_dl_api.domain.model.Produto;
+import com.daniel.loja_dl_api.domain.model.entity.Categoria;
+import com.daniel.loja_dl_api.domain.model.entity.Produto;
 import com.daniel.loja_dl_api.domain.model.dto.ProdutoRequestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.ProdutoResponseDTO;
 import com.daniel.loja_dl_api.domain.repository.CategoriaRepository;
@@ -10,7 +10,6 @@ import com.daniel.loja_dl_api.infra.exception.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
 import java.util.stream.Collectors;
