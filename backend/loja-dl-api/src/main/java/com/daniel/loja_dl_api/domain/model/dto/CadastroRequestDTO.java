@@ -5,10 +5,12 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class CadastroRequestDTO {
     @NotBlank(message = "o nome é obrigatório!")
     private String nome;
@@ -19,7 +21,4 @@ public class CadastroRequestDTO {
 
     @NotBlank(message = "A senha é obrigatória")
     private String senha;
-
-    @NotNull(message = "Perfil é obrigatório")
-    private Perfil perfil;
 }

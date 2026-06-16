@@ -4,6 +4,7 @@ import com.daniel.loja_dl_api.domain.model.dto.CadastroRequestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.LoginResquestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.TokenResponseDTO;
 import com.daniel.loja_dl_api.domain.model.entity.Usuario;
+import com.daniel.loja_dl_api.domain.model.enums.Perfil;
 import com.daniel.loja_dl_api.domain.repository.UsuarioRepository;
 import com.daniel.loja_dl_api.infra.security.TokenService;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class AutenticacaoController {
         }
 
         String senhaCripto = passwordEncoder.encode(requestDTO.getSenha());
-        Usuario novoUsuario = new Usuario(null, requestDTO.getNome(), requestDTO.getEmail(), senhaCripto, requestDTO.getPerfil());
+        Usuario novoUsuario = new Usuario(null, requestDTO.getNome(), requestDTO.getEmail(), senhaCripto, Perfil.CLIENTE);
 
         usuarioRepository.save(novoUsuario);
         return ResponseEntity.ok("Usuário cadastrado com sucesso!");
