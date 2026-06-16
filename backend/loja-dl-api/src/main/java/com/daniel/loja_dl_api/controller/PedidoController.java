@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class PedidoController {
     private final PedidoService pedidoService;
 
     @PostMapping("/checkout")
+    @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity<PedidoResponseDTO> efetuarCheckout(@RequestBody @Valid PedidoRequestDTO request){
         PedidoResponseDTO responseDTO = pedidoService.finalizarCompra(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN')")
     public ResponseEntity<List<PedidoResponseDTO>> listarHistorico(){
         List<PedidoResponseDTO> lista = pedidoService.listarTodos();
         return ResponseEntity.ok(lista);
