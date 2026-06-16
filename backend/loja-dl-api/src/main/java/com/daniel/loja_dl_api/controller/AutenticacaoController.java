@@ -1,6 +1,8 @@
 package com.daniel.loja_dl_api.controller;
 
 import com.daniel.loja_dl_api.domain.model.dto.CadastroRequestDTO;
+import com.daniel.loja_dl_api.domain.model.dto.LoginResquestDTO;
+import com.daniel.loja_dl_api.domain.model.dto.TokenResponseDTO;
 import com.daniel.loja_dl_api.domain.model.entity.Usuario;
 import com.daniel.loja_dl_api.domain.repository.UsuarioRepository;
 import com.daniel.loja_dl_api.infra.security.TokenService;
@@ -8,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,5 +38,15 @@ public class AutenticacaoController {
 
         usuarioRepository.save(novoUsuario);
         return ResponseEntity.ok("Usuário cadastrado com sucesso!");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenResponseDTO> login(@RequestBody @Valid LoginResquestDTO dto){
+        var dadosLogin = new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha());
+        var authetication = authenticationManager.authenticate(dadosLogin);
+
+        String tokenJWT = tokenService.gerarToken((Usuario) authetication.getPrincipal());
+
+        return ResponseEntity.ok(new TokenResponseDTO(tokenJWT));
     }
 }
