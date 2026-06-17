@@ -2,6 +2,7 @@ package com.daniel.loja_dl_api.service;
 
 import com.daniel.loja_dl_api.domain.model.entity.Pedido;
 import com.daniel.loja_dl_api.domain.model.entity.Produto;
+import com.daniel.loja_dl_api.domain.model.entity.Usuario;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
 import com.daniel.loja_dl_api.domain.model.dto.*;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
@@ -9,6 +10,7 @@ import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
 import com.daniel.loja_dl_api.infra.exception.BusinessException;
 import com.daniel.loja_dl_api.infra.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +28,13 @@ public class PedidoService {
 
     @Transactional
     public PedidoResponseDTO finalizarCompra(PedidoRequestDTO request){
+
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Pedido pedido = new Pedido();
         pedido.setDataPedido(LocalDateTime.now());
         pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+        pedido.setUsuario(usuarioLogado);
 
         BigDecimal valorTotalPedido = BigDecimal.ZERO;
         List<ItemPedido> itensPedido = new ArrayList<>();
