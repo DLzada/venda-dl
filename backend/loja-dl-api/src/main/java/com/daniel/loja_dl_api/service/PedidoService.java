@@ -114,7 +114,7 @@ public class PedidoService {
                 .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado!"));
 
         try {
-            StatusPedido novoStatus = StatusPedido.valueOf(novoStatusStr.toLowerCase());
+            StatusPedido novoStatus = StatusPedido.valueOf(novoStatusStr.toUpperCase());
 
             pedido.setStatus(novoStatus);
             pedidoRepository.save(pedido);
