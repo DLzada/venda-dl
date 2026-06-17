@@ -3,6 +3,7 @@ package com.daniel.loja_dl_api.controller;
 import com.daniel.loja_dl_api.domain.model.dto.CadastroRequestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.LoginResquestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.TokenResponseDTO;
+import com.daniel.loja_dl_api.domain.model.dto.UsuarioResponseDTO;
 import com.daniel.loja_dl_api.domain.model.entity.Usuario;
 import com.daniel.loja_dl_api.domain.model.enums.Perfil;
 import com.daniel.loja_dl_api.domain.repository.UsuarioRepository;
@@ -12,11 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -49,5 +48,18 @@ public class AutenticacaoController {
         String tokenJWT = tokenService.gerarToken((Usuario) authetication.getPrincipal());
 
         return ResponseEntity.ok(new TokenResponseDTO(tokenJWT));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UsuarioResponseDTO> obterUsuarioLogado(){
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UsuarioResponseDTO response = new UsuarioResponseDTO(
+                usuarioLogado.getNome(),
+                usuarioLogado.getEmail(),
+                usuarioLogado.getPerfil().name()
+        );
+
+        return ResponseEntity.ok(response);
     }
 }
