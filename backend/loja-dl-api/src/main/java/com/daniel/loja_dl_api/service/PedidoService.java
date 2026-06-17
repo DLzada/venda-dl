@@ -106,4 +106,20 @@ public class PedidoService {
                 itensDTO
         );
     }
+
+    @Transactional
+    public void atualizarPedido(Long pedidoId, String novoStatusStr){
+
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado!"));
+
+        try {
+            StatusPedido novoStatus = StatusPedido.valueOf(novoStatusStr.toLowerCase());
+
+            pedido.setStatus(novoStatus);
+            pedidoRepository.save(pedido);
+        }catch (IllegalArgumentException e){
+            throw new BusinessException("Status inválido!");
+        }
+    }
 }
