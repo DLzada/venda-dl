@@ -91,6 +91,7 @@ public class PedidoService {
                     dto.setId(pedido.getId());
                     dto.setDataPedido(pedido.getDataPedido());
                     dto.setStatus(pedido.getStatus().name());
+                    dto.setValorTotal(pedido.getValorTotal());
 
                     return dto;
                 })
