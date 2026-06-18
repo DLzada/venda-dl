@@ -3,6 +3,7 @@ package com.daniel.loja_dl_api.service;
 import com.daniel.loja_dl_api.domain.model.entity.Pedido;
 import com.daniel.loja_dl_api.domain.model.entity.Produto;
 import com.daniel.loja_dl_api.domain.model.entity.Usuario;
+import com.daniel.loja_dl_api.domain.model.enums.Perfil;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
 import com.daniel.loja_dl_api.domain.model.dto.*;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
@@ -74,14 +75,26 @@ public class PedidoService {
 
     @Transactional(readOnly = true)
     public List<PedidoResponseDTO> listarTodos(){
-        return pedidoRepository.findAll().stream()
-                .map(pedido -> new PedidoResponseDTO(
-                        pedido.getId(),
-                        pedido.getDataPedido(),
-                        pedido.getValorTotal(),
-                        pedido.getStatus().name()
-                ))
-                .collect(Collectors.toList());
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<Pedido> pedidos;
+
+        if(usuarioLogado.getPerfil() == Perfil.CLIENTE){
+            pedidos = pedidoRepository.findByUsuario(usuarioLogado);
+        }else {
+            pedidos = pedidoRepository.findAll();
+        }
+
+        return pedidos.stream()
+                .map(pedido -> {
+                    PedidoResponseDTO dto = new PedidoResponseDTO();
+                    dto.setId(pedido.getId());
+                    dto.setDataPedido(pedido.getDataPedido());
+                    dto.setStatus(pedido.getStatus().name());
+
+                    return dto;
+                })
+                .toList();
     }
 
     @Transactional(readOnly = true)
