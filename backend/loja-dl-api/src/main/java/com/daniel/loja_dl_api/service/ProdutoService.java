@@ -6,6 +6,7 @@ import com.daniel.loja_dl_api.domain.model.dto.ProdutoRequestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.ProdutoResponseDTO;
 import com.daniel.loja_dl_api.domain.repository.CategoriaRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
+import com.daniel.loja_dl_api.infra.exception.BusinessException;
 import com.daniel.loja_dl_api.infra.exception.EntityNotFoundException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,10 @@ public class ProdutoService {
 
     @Transactional
     public ProdutoResponseDTO criar(ProdutoRequestDTO requestDTO){
+        if(produtoRepository.existsByNome(requestDTO.getNome().trim())){
+            throw new BusinessException("Já existe um produto com esse nome!");
+        }
+
         Categoria categoria = categoriaRepository.findById(requestDTO.getCategoriaId())
                 .orElseThrow(() -> new EntityNotFoundException("Categoria não encontrada..."));
 
