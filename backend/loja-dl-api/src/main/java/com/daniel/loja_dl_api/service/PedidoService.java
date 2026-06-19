@@ -1,11 +1,10 @@
 package com.daniel.loja_dl_api.service;
 
-import com.daniel.loja_dl_api.domain.model.entity.Pedido;
-import com.daniel.loja_dl_api.domain.model.entity.Produto;
-import com.daniel.loja_dl_api.domain.model.entity.Usuario;
+import com.daniel.loja_dl_api.domain.model.entity.*;
 import com.daniel.loja_dl_api.domain.model.enums.Perfil;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
 import com.daniel.loja_dl_api.domain.model.dto.*;
+import com.daniel.loja_dl_api.domain.repository.CarrinhoRepository;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
 import com.daniel.loja_dl_api.infra.exception.BusinessException;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
+    private final CarrinhoRepository carrinhoRepository;
 
     @Transactional
     public PedidoResponseDTO finalizarCompra(PedidoRequestDTO request){
@@ -135,5 +135,66 @@ public class PedidoService {
         }catch (IllegalArgumentException e){
             throw new BusinessException("Status inválido!");
         }
+    }
+
+    @Transactional
+    public PedidoResponseDTO finalizarCompraCarrinho(){
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        Carrinho carrinho = carrinhoRepository.findByUsuario(usuarioLogado)
+                .orElseThrow(()-> new BusinessException("Voce não possui um carrinho!"));
+
+        if(carrinho.getItens().isEmpty()){
+            throw new BusinessException("Seu carrinho está vazio!");
+        }
+
+        Pedido pedido = new Pedido();
+        pedido.setDataPedido(LocalDateTime.now());
+        pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+        pedido.setUsuario(usuarioLogado);
+
+        List<ItemPedido> itensPedido = new ArrayList<>();
+        BigDecimal valorTotalPedido = BigDecimal.ZERO;
+
+        for(ItemCarrinho itemCarrinho: carrinho.getItens()){
+            Produto produto = itemCarrinho.getProduto();
+
+            if(produto.getQuantidadeEstoque() < itemCarrinho.getQuantidade()){
+                throw new BusinessException("Estoque insufisiente do produto!");
+            }
+
+            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - itemCarrinho.getQuantidade());
+
+            ItemPedido itemPedido = new ItemPedido();
+            itemPedido.setPedido(pedido);
+            itemPedido.setProduto(produto);
+            itemPedido.setQuantidade(itemCarrinho.getQuantidade());
+            itemPedido.setPrecoUnitario(produto.getPreco());
+
+            BigDecimal subtotal = produto.getPreco().multiply(new BigDecimal(itemCarrinho.getQuantidade()));
+            valorTotalPedido = valorTotalPedido.add(subtotal);
+
+            itensPedido.add(itemPedido);
+        }
+
+        pedido.setItens(itensPedido);
+        pedido.setValorTotal(valorTotalPedido);
+
+        pedidoRepository.save(pedido);
+
+        carrinho.getItens().clear();
+        carrinhoRepository.save(carrinho);
+
+        return converterParaPedidoResponseDTO(pedido);
+    }
+
+    private PedidoResponseDTO converterParaPedidoResponseDTO(Pedido pedido){
+        PedidoResponseDTO responseDTO = new PedidoResponseDTO();
+        responseDTO.setId(pedido.getId());
+        responseDTO.setDataPedido(pedido.getDataPedido());
+        responseDTO.setStatus(pedido.getStatus().name());
+        responseDTO.setValorTotal(pedido.getValorTotal());
+
+        return responseDTO;
     }
 }
