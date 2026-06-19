@@ -77,4 +77,23 @@ public class CarrinhoService {
 
         return new CarrinhoResponseDTO(itensDTO, valorTotalGeral);
     }
+
+    @Transactional
+    public CarrinhoResponseDTO removerItem(Long produtoId){
+        Carrinho carrinho = obterCarrinhoUsuarioLogado();
+
+        ItemCarrinho item = carrinho.getItens().stream()
+                .filter(i -> i.getProduto().getId().equals(produtoId))
+                .findFirst()
+                .orElseThrow(() -> new BusinessException("Este produto nao esta no seu carrinho!"));
+
+        if(item.getQuantidade() > 1){
+            item.setQuantidade(item.getQuantidade() - 1);
+        }else {
+            carrinho.getItens().remove(item);
+        }
+
+        carrinhoRepository.save(carrinho);
+        return buscarCarrinhoDTO();
+    }
 }
