@@ -9,7 +9,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -26,9 +30,13 @@ public class ProdutoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProdutoResponseDTO>> listarTodos(){
-        List<ProdutoResponseDTO> lista = produtoService.listarTodos();
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<Page<ProdutoResponseDTO>> listarTodos(
+            @RequestParam(required = false)BigDecimal precoMin,
+            @RequestParam(required = false)BigDecimal precoMax,
+            @PageableDefault(size = 10, sort = "nome") Pageable pageable
+    ){
+        Page<ProdutoResponseDTO> produtos = produtoService.listarComFiltros(precoMin, precoMax, pageable);
+        return ResponseEntity.ok(produtos);
     }
 
     @GetMapping("/filtrar-categoria")
