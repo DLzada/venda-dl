@@ -26,4 +26,8 @@ public class CarrinhoController {
         return ResponseEntity.ok(carrinhoService.adicionarItem(requestDTO));
     }
 
+    @DeleteMapping("/remover/{produtoId}")
+    public ResponseEntity<CarrinhoResponseDTO> removerItem(@PathVariable Long produtoId){
+        return ResponseEntity.ok(carrinhoService.removerItem(produtoId));
+    }
 }
