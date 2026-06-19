@@ -22,8 +22,8 @@ public class PedidoController {
 
     @PostMapping("/checkout")
     @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN')")
-    public ResponseEntity<PedidoResponseDTO> efetuarCheckout(@RequestBody @Valid PedidoRequestDTO request){
-        PedidoResponseDTO responseDTO = pedidoService.finalizarCompra(request);
+    public ResponseEntity<PedidoResponseDTO> efetuarCheckout(){
+        PedidoResponseDTO responseDTO = pedidoService.finalizarCompraCarrinho();
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
