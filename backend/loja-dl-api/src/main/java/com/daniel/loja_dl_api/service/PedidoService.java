@@ -27,51 +27,51 @@ public class PedidoService {
     private final ProdutoRepository produtoRepository;
     private final CarrinhoRepository carrinhoRepository;
 
-    @Transactional
-    public PedidoResponseDTO finalizarCompra(PedidoRequestDTO request){
-
-        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        Pedido pedido = new Pedido();
-        pedido.setDataPedido(LocalDateTime.now());
-        pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
-        pedido.setUsuario(usuarioLogado);
-
-        BigDecimal valorTotalPedido = BigDecimal.ZERO;
-        List<ItemPedido> itensPedido = new ArrayList<>();
-
-        for(ItemCompraResquestDTO itemDTO : request.getItens()){
-            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
-                    .orElseThrow(()-> new EntityNotFoundException("Produto não encontrado"));
-
-            if(produto.getQuantidadeEstoque() < itemDTO.getQuantidade()){
-                throw new BusinessException("Estoque insuficiente para o produto selecionado: " + produto.getNome() + ". Estoque Atual: " + produto.getQuantidadeEstoque());
-            }
-
-            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - itemDTO.getQuantidade());
-            produtoRepository.save(produto);
-
-            ItemPedido itemPedido = new ItemPedido();
-            itemPedido.setProduto(produto);
-            itemPedido.setQuantidade(itemDTO.getQuantidade());
-            itemPedido.setPrecoUnitario(produto.getPreco());
-            itemPedido.setPedido(pedido);
-
-            BigDecimal subTotal = produto.getPreco().multiply(BigDecimal.valueOf(itemDTO.getQuantidade()));
-            valorTotalPedido = valorTotalPedido.add(subTotal);
-        }
-
-        pedido.setItens(itensPedido);
-        pedido.setValorTotal(valorTotalPedido);
-        pedido = pedidoRepository.save(pedido);
-
-        return new PedidoResponseDTO(
-                pedido.getId(),
-                pedido.getDataPedido(),
-                pedido.getValorTotal(),
-                pedido.getStatus().name()
-        );
-    }
+//    @Transactional
+//    public PedidoResponseDTO finalizarCompra(PedidoRequestDTO request){
+//
+//        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//
+//        Pedido pedido = new Pedido();
+//        pedido.setDataPedido(LocalDateTime.now());
+//        pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+//        pedido.setUsuario(usuarioLogado);
+//
+//        BigDecimal valorTotalPedido = BigDecimal.ZERO;
+//        List<ItemPedido> itensPedido = new ArrayList<>();
+//
+//        for(ItemCompraResquestDTO itemDTO : request.getItens()){
+//            Produto produto = produtoRepository.findById(itemDTO.getProdutoId())
+//                    .orElseThrow(()-> new EntityNotFoundException("Produto não encontrado"));
+//
+//            if(produto.getQuantidadeEstoque() < itemDTO.getQuantidade()){
+//                throw new BusinessException("Estoque insuficiente para o produto selecionado: " + produto.getNome() + ". Estoque Atual: " + produto.getQuantidadeEstoque());
+//            }
+//
+//            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() - itemDTO.getQuantidade());
+//            produtoRepository.save(produto);
+//
+//            ItemPedido itemPedido = new ItemPedido();
+//            itemPedido.setProduto(produto);
+//            itemPedido.setQuantidade(itemDTO.getQuantidade());
+//            itemPedido.setPrecoUnitario(produto.getPreco());
+//            itemPedido.setPedido(pedido);
+//
+//            BigDecimal subTotal = produto.getPreco().multiply(BigDecimal.valueOf(itemDTO.getQuantidade()));
+//            valorTotalPedido = valorTotalPedido.add(subTotal);
+//        }
+//
+//        pedido.setItens(itensPedido);
+//        pedido.setValorTotal(valorTotalPedido);
+//        pedido = pedidoRepository.save(pedido);
+//
+//        return new PedidoResponseDTO(
+//                pedido.getId(),
+//                pedido.getDataPedido(),
+//                pedido.getValorTotal(),
+//                pedido.getStatus().name()
+//        );
+//    }
 
     @Transactional(readOnly = true)
     public List<PedidoResponseDTO> listarTodos(){
