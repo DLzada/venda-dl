@@ -8,10 +8,14 @@ import com.daniel.loja_dl_api.domain.repository.CategoriaRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
 import com.daniel.loja_dl_api.infra.exception.BusinessException;
 import com.daniel.loja_dl_api.infra.exception.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,11 +46,30 @@ public class ProdutoService {
         return converterParaResponse(produto);
     }
 
-    @Transactional(readOnly = true)
-    public List<ProdutoResponseDTO> listarTodos(){
-        return produtoRepository.findAll().stream()
-                .map(this::converterParaResponse)
-                .collect(Collectors.toList());
+//    @Transactional(readOnly = true)
+//    public List<ProdutoResponseDTO> listarTodos(){
+//        return produtoRepository.findAll().stream()
+//                .map(this::converterParaResponse)
+//                .collect(Collectors.toList());
+//    }
+
+    public Page<ProdutoResponseDTO> listarComFiltros(BigDecimal precoMin, BigDecimal precoMax, Pageable pageable){
+        Page<Produto> produtosPage;
+
+        if(precoMin != null && precoMax != null){
+            produtosPage = produtoRepository.findByPrecoBetween(precoMin, precoMax, pageable);
+        }else {
+            produtosPage = produtoRepository.findAll(pageable);
+        }
+
+        return produtosPage.map(produto -> {
+            ProdutoResponseDTO dto = new ProdutoResponseDTO();
+            dto.setId(produto.getId());
+            dto.setNome(produto.getNome());
+            dto.setPreco(produto.getPreco());
+            dto.setQuantidadeEstoque(produto.getQuantidadeEstoque());
+            return dto;
+        });
     }
 
     @Transactional(readOnly = true)
