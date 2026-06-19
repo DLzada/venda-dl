@@ -26,6 +26,19 @@ public class CategoriaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
+    @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CategoriaResponseDTO> atualizar(@PathVariable Long id, @RequestBody @Valid CategoriaRequestDTO dto){
+        return ResponseEntity.ok(categoriaService.atualizar(id, dto));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> deletar(@PathVariable Long id){
+         categoriaService.deletar(id);
+         return ResponseEntity.noContent().build();
+    }
+
     @GetMapping
     public ResponseEntity<List<CategoriaResponseDTO>> listarTodas(){
         List <CategoriaResponseDTO> lista = categoriaService.listarTodas();
