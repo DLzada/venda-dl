@@ -1,15 +1,19 @@
 package com.daniel.loja_dl_api.service;
 
+import com.daniel.loja_dl_api.domain.model.dto.UsuarioAtualizacaoRequestDTO;
+import com.daniel.loja_dl_api.domain.model.dto.UsuarioResponseDTO;
 import com.daniel.loja_dl_api.domain.model.entity.Categoria;
 import com.daniel.loja_dl_api.domain.model.entity.Produto;
 import com.daniel.loja_dl_api.domain.model.dto.ProdutoRequestDTO;
 import com.daniel.loja_dl_api.domain.model.dto.ProdutoResponseDTO;
+import com.daniel.loja_dl_api.domain.model.entity.Usuario;
 import com.daniel.loja_dl_api.domain.repository.CategoriaRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
 import com.daniel.loja_dl_api.infra.exception.BusinessException;
 import com.daniel.loja_dl_api.infra.exception.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
