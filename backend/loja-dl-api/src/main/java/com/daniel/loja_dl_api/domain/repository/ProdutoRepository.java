@@ -2,6 +2,7 @@ package com.daniel.loja_dl_api.domain.repository;
 
 import com.daniel.loja_dl_api.domain.model.entity.Produto;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -20,5 +21,9 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     long countByCategoriaId(Long categoriaId);
 
+    @EntityGraph(attributePaths = {"categoria"})
+    Page<Produto> findAll(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"categoria"})
     Page<Produto> findByPrecoBetween(BigDecimal precoMin, BigDecimal precoMax, Pageable pageable);
 }
