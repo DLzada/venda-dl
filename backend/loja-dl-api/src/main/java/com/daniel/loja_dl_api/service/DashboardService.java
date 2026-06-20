@@ -5,6 +5,8 @@ import com.daniel.loja_dl_api.domain.model.dto.ItemPedido;
 import com.daniel.loja_dl_api.domain.model.entity.Pedido;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +20,12 @@ import java.util.Map;
 public class DashboardService {
     private final PedidoRepository pedidoRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     public DashboardResumoResponseDTO obterResumoVendas(){
+        entityManager.clear();
+
         List<Pedido> pedidosPagos = pedidoRepository.findByStatus(StatusPedido.PAGO);
 
         BigDecimal faturamentoTotal = BigDecimal.ZERO;
