@@ -53,4 +53,11 @@ public class PedidoController {
         pedidoService.atualizarPedido(id, requestDTO.getStatus());
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{id}/cancelar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> cancelar(@PathVariable Long id){
+        pedidoService.cancelarPedido(id);
+        return ResponseEntity.noContent().build();
+    }
 }
