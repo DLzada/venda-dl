@@ -208,4 +208,24 @@ public class PedidoService {
                 })
                 .toList();
     }
+
+    @Transactional
+    public void cancelarPedido(Long id){
+        Pedido pedido = pedidoRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("Pedido não encontrado com o ID: " + id));
+
+        if(pedido.getStatus() == StatusPedido.CANCELADO){
+            throw new BusinessException("Este pedido já se encontra cancelado");
+        }
+
+        for (ItemPedido item : pedido.getItens()) {
+            Produto produto = item.getProduto();
+
+            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + item.getQuantidade());
+            produtoRepository.save(produto);
+        }
+
+        pedido.setStatus(StatusPedido.CANCELADO);
+        pedidoRepository.save(pedido);
+    }
 }
