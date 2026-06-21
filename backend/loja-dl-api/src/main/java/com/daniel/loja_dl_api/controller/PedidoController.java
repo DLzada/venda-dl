@@ -28,9 +28,16 @@ public class PedidoController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('CLIENTE') or hasRole('ADMIN')")
-    public ResponseEntity<List<PedidoResponseDTO>> listarHistorico(){
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<List<PedidoResponseDTO>> listarTodosOspedidos(){
         List<PedidoResponseDTO> lista = pedidoService.listarTodos();
+        return ResponseEntity.ok(lista);
+    }
+
+    @GetMapping("/meus-pedidos")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('CLIENTE')")
+    public ResponseEntity<List<PedidoResponseDTO>> listarHistorico() {
+        List<PedidoResponseDTO> lista = pedidoService.listarMeusPedidos();
         return ResponseEntity.ok(lista);
     }
 
