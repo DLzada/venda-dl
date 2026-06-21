@@ -46,6 +46,11 @@ public class CarrinhoService {
         int quatidadeJaNoCarrinho = itemExistente.map(ItemCarrinho::getQuantidade).orElse(0);
         int quantidadeTotalPretendida = quatidadeJaNoCarrinho + requestDTO.getQuantidade();
 
+        if (quantidadeTotalPretendida > quatidadeJaNoCarrinho+ produto.getQuantidadeEstoque()){
+            throw new BusinessException("Estoque insuficiente! Estoque atual " + produto.getQuantidadeEstoque()
+            + " unidades . Você já possui " + quatidadeJaNoCarrinho + " no carrinho.");
+        }
+
         if(itemExistente.isPresent()){
             ItemCarrinho item = itemExistente.get();
             item.setQuantidade(item.getQuantidade() + requestDTO.getQuantidade());
