@@ -75,15 +75,7 @@ public class PedidoService {
 
     @Transactional(readOnly = true)
     public List<PedidoResponseDTO> listarTodos(){
-        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        List<Pedido> pedidos;
-
-        if(usuarioLogado.getPerfil() == Perfil.CLIENTE){
-            pedidos = pedidoRepository.findByUsuario(usuarioLogado);
-        }else {
-            pedidos = pedidoRepository.findAll();
-        }
+        List<Pedido> pedidos = pedidoRepository.findAll();
 
         return pedidos.stream()
                 .map(pedido -> {
