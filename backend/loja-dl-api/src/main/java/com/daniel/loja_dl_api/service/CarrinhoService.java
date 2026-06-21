@@ -43,6 +43,9 @@ public class CarrinhoService {
                 .filter(item -> item.getProduto().getId().equals(produto.getId()))
                 .findFirst();
 
+        int quatidadeJaNoCarrinho = itemExistente.map(ItemCarrinho::getQuantidade).orElse(0);
+        int quantidadeTotalPretendida = quatidadeJaNoCarrinho + requestDTO.getQuantidade();
+
         if(itemExistente.isPresent()){
             ItemCarrinho item = itemExistente.get();
             item.setQuantidade(item.getQuantidade() + requestDTO.getQuantidade());
