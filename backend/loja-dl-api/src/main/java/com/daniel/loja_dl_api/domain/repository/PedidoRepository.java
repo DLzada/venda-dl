@@ -15,4 +15,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 
     @EntityGraph(attributePaths = {"itens"})
     List<Pedido> findByStatus(StatusPedido status);
+
+    List<Pedido> findByUsuarioIdOrderByDataCriacaoDesc(Long usuarioId);
 }
