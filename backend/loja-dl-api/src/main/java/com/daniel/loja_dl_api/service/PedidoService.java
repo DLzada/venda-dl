@@ -5,6 +5,7 @@ import com.daniel.loja_dl_api.domain.model.enums.Perfil;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
 import com.daniel.loja_dl_api.domain.model.dto.*;
 import com.daniel.loja_dl_api.domain.repository.CarrinhoRepository;
+import com.daniel.loja_dl_api.domain.repository.CupomRepository;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
 import com.daniel.loja_dl_api.infra.exception.BusinessException;
@@ -15,10 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final ProdutoRepository produtoRepository;
     private final CarrinhoRepository carrinhoRepository;
+    private final CupomRepository cupomRepository;
 
 //    @Transactional
 //    public PedidoResponseDTO finalizarCompra(PedidoRequestDTO request){
@@ -130,7 +132,7 @@ public class PedidoService {
     }
 
     @Transactional
-    public PedidoResponseDTO finalizarCompraCarrinho(){
+    public PedidoResponseDTO finalizarCompraCarrinho(String codigoCupom){
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Carrinho carrinho = carrinhoRepository.findByUsuario(usuarioLogado)
@@ -167,6 +169,21 @@ public class PedidoService {
             valorTotalPedido = valorTotalPedido.add(subtotal);
 
             itensPedido.add(itemPedido);
+        }
+
+        if (codigoCupom != null && !codigoCupom.trim().isEmpty()) {
+            Cupom cupom = cupomRepository.findByCodigoIgnoreCase(codigoCupom.trim())
+                    .orElseThrow(() -> new BusinessException("Cupom de desconto inválido!"));
+
+            if (cupom.getDataValidade().isBefore(LocalDate.now())) {
+                throw new BusinessException("Este cupom já está expirado!");
+            }
+
+            BigDecimal desconto = valorTotalPedido.multiply(cupom.getPorcentagemDesconto())
+                    .divide(BigDecimal.valueOf(100));
+
+
+            valorTotalPedido = valorTotalPedido.subtract(desconto);
         }
 
         pedido.setItens(itensPedido);
