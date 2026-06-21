@@ -189,4 +189,23 @@ public class PedidoService {
 
         return responseDTO;
     }
+
+    @Transactional(readOnly = true)
+    public List<PedidoResponseDTO> listarMeusPedidos(){
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        List<Pedido> pedidos = pedidoRepository.findByUsuarioIdOrderByDataPedidoDesc(usuarioLogado.getId());
+
+        return pedidos.stream()
+                .map(pedido -> {
+                    PedidoResponseDTO dto = new PedidoResponseDTO();
+                    dto.setId(pedido.getId());
+                    dto.setDataPedido(pedido.getDataPedido());
+                    dto.setStatus(pedido.getStatus().name());
+                    dto.setValorTotal(pedido.getValorTotal());
+
+                    return dto;
+                })
+                .toList();
+    }
 }
