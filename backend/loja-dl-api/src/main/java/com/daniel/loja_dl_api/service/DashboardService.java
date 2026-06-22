@@ -2,13 +2,17 @@ package com.daniel.loja_dl_api.service;
 
 import com.daniel.loja_dl_api.domain.model.dto.DashboardResumoResponseDTO;
 import com.daniel.loja_dl_api.domain.model.dto.ItemPedido;
+import com.daniel.loja_dl_api.domain.model.dto.ProdutoResponseDTO;
 import com.daniel.loja_dl_api.domain.model.entity.Pedido;
+import com.daniel.loja_dl_api.domain.model.entity.Produto;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
+import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -19,6 +23,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DashboardService {
     private final PedidoRepository pedidoRepository;
+    private final ProdutoRepository produtoRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -50,5 +55,25 @@ public class DashboardService {
         long totalPedidosConcluidos = pedidosPagos.size();
 
         return new DashboardResumoResponseDTO(faturamentoTotal, totalPedidosConcluidos, produtoCampeao);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProdutoResponseDTO> listarAlertasEstoqueBaixo(){
+        int limiteCritico = 5;
+        List<Produto> produtosCriticos = produtoRepository.findByQuantidadeEstoqueLessThanEqual(limiteCritico);
+
+        return produtosCriticos.stream()
+                .map(produto -> {
+                    ProdutoResponseDTO responseDTO = new ProdutoResponseDTO();
+                    responseDTO.setId(produto.getId());
+                    responseDTO.setNome(produto.getNome());
+                    responseDTO.setPreco(produto.getPreco());
+                    responseDTO.setQuantidadeEstoque(produto.getQuantidadeEstoque());
+                    if(produto.getCategoria() != null){
+                        responseDTO.setNomeCategoria(produto.getCategoria().getNome());
+                    }
+                    return responseDTO;
+                })
+                .toList();
     }
 }

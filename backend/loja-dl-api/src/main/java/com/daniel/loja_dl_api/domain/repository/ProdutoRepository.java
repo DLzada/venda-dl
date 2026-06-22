@@ -26,4 +26,6 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     @EntityGraph(attributePaths = {"categoria"})
     Page<Produto> findByPrecoBetween(BigDecimal precoMin, BigDecimal precoMax, Pageable pageable);
+
+    List<Produto> findByQuantidadeEstoqueLessThanEqual(int limite);
 }
