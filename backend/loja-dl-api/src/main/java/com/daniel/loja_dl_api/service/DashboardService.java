@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,18 +30,26 @@ public class DashboardService {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public DashboardResumoResponseDTO obterResumoVendas(){
+    public DashboardResumoResponseDTO obterResumoVendas(LocalDate dataInicio, LocalDate dataFim){
         entityManager.clear();
 
-        List<Pedido> pedidosPagos = pedidoRepository.findByStatus(StatusPedido.PAGO);
+        List<Pedido> pedidosPagos;
+
+        if (dataInicio != null && dataFim != null) {
+            LocalDateTime inicio = dataInicio.atStartOfDay();
+            LocalDateTime fim = dataFim.atTime(23, 59, 59);
+            pedidosPagos = pedidoRepository.findByStatusAndDataPedidoBetween(StatusPedido.PAGO, inicio, fim);
+        } else {
+            pedidosPagos = pedidoRepository.findByStatus(StatusPedido.PAGO);
+        }
 
         BigDecimal faturamentoTotal = BigDecimal.ZERO;
         Map<String, Integer> contagemProdutos = new HashMap<>();
 
-        for (Pedido pedido: pedidosPagos){
+        for (Pedido pedido : pedidosPagos){
             faturamentoTotal = faturamentoTotal.add(pedido.getValorTotal());
 
-            for (ItemPedido item: pedido.getItens()){
+            for (ItemPedido item : pedido.getItens()){
                 String nomeproduto = item.getProduto().getNome();
                 int qtdComprada = item.getQuantidade();
 
@@ -76,4 +86,5 @@ public class DashboardService {
                 })
                 .toList();
     }
+
 }
