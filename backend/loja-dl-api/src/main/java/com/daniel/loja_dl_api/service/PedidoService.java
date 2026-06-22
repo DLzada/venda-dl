@@ -245,4 +245,21 @@ public class PedidoService {
         pedido.setStatus(StatusPedido.CANCELADO);
         pedidoRepository.save(pedido);
     }
+
+    @Transactional
+    public void processarPagamento(Long pedidoId){
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(()-> new BusinessException("Pedido não encontrado!"));
+
+        if (pedido.getStatus()== StatusPedido.CANCELADO){
+            throw new BusinessException("Não foi possivel pagar o pedido que já foi cancelado!");
+        }
+
+        if (pedido.getStatus() == StatusPedido.PAGO){
+            throw new BusinessException("Pedido já foi pago!");
+        }
+
+        pedido.setStatus(StatusPedido.PAGO);
+        pedidoRepository.save(pedido);
+    }
 }
