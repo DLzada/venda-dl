@@ -60,4 +60,11 @@ public class PedidoController {
         pedidoService.cancelarPedido(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/{id}/pagar")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> simularPagamento(@PathVariable Long id){
+        pedidoService.processarPagamento(id);
+        return ResponseEntity.ok().build();
+    }
 }
