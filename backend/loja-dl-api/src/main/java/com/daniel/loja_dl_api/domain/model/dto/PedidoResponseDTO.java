@@ -17,4 +17,5 @@ public class PedidoResponseDTO {
     private LocalDateTime dataPedido;
     private BigDecimal valorTotal;
     private String status;
+    private String urlPagamento;
 }

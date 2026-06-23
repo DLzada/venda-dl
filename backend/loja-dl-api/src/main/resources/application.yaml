@@ -23,3 +23,8 @@ security:
   admin:
     username: ${ADMIN_USER}
     password: ${ADMIN_PASSWORD}
+
+app:
+  gateway:
+    abacate-pay:
+      token: ${ABACATE_PAY_TOKEN}

@@ -28,6 +28,7 @@ public class PedidoService {
     private final ProdutoRepository produtoRepository;
     private final CarrinhoRepository carrinhoRepository;
     private final CupomRepository cupomRepository;
+    private final AbacatePayService abacatePayService;
 
 //    @Transactional
 //    public PedidoResponseDTO finalizarCompra(PedidoRequestDTO request){
@@ -191,6 +192,14 @@ public class PedidoService {
 
         pedidoRepository.save(pedido);
 
+        try {
+            String urlPix = abacatePayService.criarCobrancaPix(pedido.getId(), pedido.getValorTotal());
+            pedido.setUrlPagamento(urlPix);
+            pedidoRepository.save(pedido);
+        }catch (Exception e){
+            System.out.println("Aviso: Não foi possível gerar o Link de Pix na API externa: " + e.getMessage());
+        }
+
         carrinho.getItens().clear();
         carrinhoRepository.save(carrinho);
 
@@ -203,6 +212,7 @@ public class PedidoService {
         responseDTO.setDataPedido(pedido.getDataPedido());
         responseDTO.setStatus(pedido.getStatus().name());
         responseDTO.setValorTotal(pedido.getValorTotal());
+        responseDTO.setUrlPagamento(pedido.getUrlPagamento());
 
         return responseDTO;
     }
