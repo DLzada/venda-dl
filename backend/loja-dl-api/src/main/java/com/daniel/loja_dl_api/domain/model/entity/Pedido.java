@@ -39,4 +39,7 @@ public class Pedido {
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
 
+    @Column(name = "url_pagamento")
+    private String urlPagamento;
+
 }

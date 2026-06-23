@@ -49,7 +49,7 @@ public class FavoritoService {
     @Transactional
     public List<ProdutoResponseDTO> listarMeusFavoritos(){
         Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<Favorito> favoritos = favoritoRepository.findByUsuario(usuarioLogado.getId());
+        List<Favorito> favoritos = favoritoRepository.findByUsuarioId(usuarioLogado.getId());
 
         return favoritos.stream()
                 .map(favorito -> {
