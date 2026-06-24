@@ -100,4 +100,21 @@ public class ProdutoService {
                 produto.getCategoria().getNome()
         );
     }
+
+    @Transactional
+    public ProdutoResponseDTO reabastecerEstoque(Long id, int quantidadeParaAdicionar) {
+        if (quantidadeParaAdicionar <= 0) {
+            throw new BusinessException("A quantidade para adicionar deve ser maior que zero!");
+        }
+
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado para reabastecimento..."));
+
+        int estoqueAtualizado = produto.getQuantidadeEstoque() + quantidadeParaAdicionar;
+        produto.setQuantidadeEstoque(estoqueAtualizado);
+
+        produto = produtoRepository.save(produto);
+
+        return converterParaResponse(produto);
+    }
 }

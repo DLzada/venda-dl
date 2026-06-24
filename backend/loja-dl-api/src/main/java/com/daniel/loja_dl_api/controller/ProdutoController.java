@@ -50,4 +50,14 @@ public class ProdutoController {
         List<ProdutoResponseDTO> lista = produtoService.buscarPorNome(nome);
         return ResponseEntity.ok(lista);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PutMapping("/{id}/reabastecer")
+    public ResponseEntity<ProdutoResponseDTO> reabastecer(
+            @PathVariable Long id,
+            @RequestParam int quantidade) {
+
+        ProdutoResponseDTO responseDTO = produtoService.reabastecerEstoque(id, quantidade);
+        return ResponseEntity.ok(responseDTO);
+    }
 }

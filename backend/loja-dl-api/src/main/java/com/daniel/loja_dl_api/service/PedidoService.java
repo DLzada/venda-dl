@@ -237,18 +237,20 @@ public class PedidoService {
     }
 
     @Transactional
-    public void cancelarPedido(Long id){
-        Pedido pedido = pedidoRepository.findById(id)
-                .orElseThrow(() -> new BusinessException("Pedido não encontrado com o ID: " + id));
+    public void cancelarPedido(Long pedidoId) {
+        Pedido pedido = pedidoRepository.findById(pedidoId)
+                .orElseThrow(() -> new BusinessException("Pedido não encontrado"));
 
-        if(pedido.getStatus() == StatusPedido.CANCELADO){
-            throw new BusinessException("Este pedido já se encontra cancelado");
+        if (pedido.getStatus() == StatusPedido.CANCELADO) {
+            throw new BusinessException("Este pedido já está cancelado.");
         }
 
         for (ItemPedido item : pedido.getItens()) {
             Produto produto = item.getProduto();
 
-            produto.setQuantidadeEstoque(produto.getQuantidadeEstoque() + item.getQuantidade());
+            int novoEstoque = produto.getQuantidadeEstoque() + item.getQuantidade();
+            produto.setQuantidadeEstoque(novoEstoque);
+
             produtoRepository.save(produto);
         }
 
