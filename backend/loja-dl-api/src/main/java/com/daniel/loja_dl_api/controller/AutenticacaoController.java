@@ -29,7 +29,7 @@ public class AutenticacaoController {
 
     @PostMapping("/cadastro")
     public ResponseEntity<String> registrar(@RequestBody @Valid CadastroRequestDTO requestDTO){
-        if(usuarioRepository.findByEmail(requestDTO.getEmail()) != null){
+        if (usuarioRepository.existsByEmail(requestDTO.getEmail())) {
             return ResponseEntity.badRequest().body("E-mail já cadastrado!");
         }
 
