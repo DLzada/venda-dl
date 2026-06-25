@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido, Long> {
@@ -20,4 +21,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByUsuarioIdOrderByDataPedidoDesc(Long usuarioId);
 
     List<Pedido> findByStatusAndDataPedidoBetween(StatusPedido status, LocalDateTime dataInicio, LocalDateTime dataFim);
+
+    Optional<Pedido> findByUrlPagamentoContaining(String url);
 }

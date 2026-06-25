@@ -1,5 +1,6 @@
 package com.daniel.loja_dl_api.service;
 
+import com.daniel.loja_dl_api.domain.model.dto.abacate.AbacateWebhookDTO;
 import com.daniel.loja_dl_api.domain.model.entity.*;
 import com.daniel.loja_dl_api.domain.model.enums.Perfil;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
@@ -273,5 +274,22 @@ public class PedidoService {
 
         pedido.setStatus(StatusPedido.PAGO);
         pedidoRepository.save(pedido);
+    }
+
+    @Transactional
+    public void atualizarStatusViaWebhook(AbacateWebhookDTO dto){
+        String abacateBillingId = dto.data().id();
+
+        Pedido pedido = pedidoRepository.findByUrlPagamentoContaining(abacateBillingId)
+                .orElseThrow(()-> new EntityNotFoundException("Pedido nao encontrado!"));
+
+        if("billing.paid".equalsIgnoreCase(dto.event()) || "PAID".equalsIgnoreCase(dto.data().status())){
+            pedido.setStatus(StatusPedido.PAGO);
+            pedidoRepository.save(pedido);
+            System.out.println("Pedido " + pedido.getId() + " atualizado para PAGO");
+        }else if("billing.expired".equalsIgnoreCase(dto.event()) || "EXPIRED".equalsIgnoreCase(dto.data().status())){
+            this.cancelarPedido(pedido.getId());
+            System.out.println("Pedido #" + pedido.getId() + "CANCELADO e estoque devolvido via webhook.");
+        }
     }
 }

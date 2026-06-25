@@ -22,6 +22,12 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        if (request.getRequestURI().contains("/api/public/webhook")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String tokenJWT = recuperarToken(request);
 
         if(tokenJWT!= null){
