@@ -23,4 +23,6 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
     List<Pedido> findByStatusAndDataPedidoBetween(StatusPedido status, LocalDateTime dataInicio, LocalDateTime dataFim);
 
     Optional<Pedido> findByUrlPagamentoContaining(String url);
+
+    List<Pedido> findByStatusAndDataPedidoBefore(StatusPedido status, LocalDateTime limite);
 }
