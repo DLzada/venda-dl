@@ -7,9 +7,11 @@ import com.daniel.loja_dl_api.domain.model.entity.Produto;
 import com.daniel.loja_dl_api.domain.repository.CategoriaRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
 import com.daniel.loja_dl_api.infra.exception.BusinessException;
+import com.daniel.loja_dl_api.infra.exception.EntityNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.platform.engine.discovery.DiscoverySelectorIdentifierParser;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -122,6 +124,23 @@ class ProdutoServiceTest {
         assertEquals("A quantidade para adicionar deve ser maior que zero!", exception.getMessage());
 
         verify(produtoRepository, never()).findById(anyLong());
+        verify(produtoRepository, never()).save(any(Produto.class));
+    }
+
+    @Test
+    @DisplayName("Deve Lançar EntityNotFoundException quando o produto não for encontrado!")
+    void reabatecerEstoqueCenario3(){
+        Long produtoId = 999L;
+        int quantidade = 10;
+
+        when(produtoRepository.findById(produtoId)).thenReturn(Optional.empty());
+
+        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class, ()->{
+            produtoService.reabastecerEstoque(produtoId, quantidade);
+        });
+
+        assertEquals("Produto não encontrado para reabastecimento...", exception.getMessage());
+
         verify(produtoRepository, never()).save(any(Produto.class));
     }
 }
