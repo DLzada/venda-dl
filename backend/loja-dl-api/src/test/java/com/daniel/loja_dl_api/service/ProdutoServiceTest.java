@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.parameters.P;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -76,6 +77,35 @@ class ProdutoServiceTest {
         assertEquals("Já existe um produto com esse nome!", exception.getMessage());
 
         verify(produtoRepository, never()).save(any(Produto.class));
+
+    }
+
+    @Test
+    @DisplayName("Deve reabastecer o estoque com sucesso quando a quantidade for válida ")
+    void reabastecerEstoqueCenario1(){
+        Long produtoId = 1L;
+        int quantidadeParaAdicionar = 15;
+
+        Categoria categoria = new Categoria();
+        categoria.setNome("Eletrônicos");
+
+        Produto produtoExistente = new Produto();
+        produtoExistente.setId(produtoId);
+        produtoExistente.setNome("Mouse Gamer");
+        produtoExistente.setQuantidadeEstoque(10);
+        produtoExistente.setCategoria(categoria);
+
+        when(produtoRepository.findById(produtoId)).thenReturn(Optional.of(produtoExistente));
+
+        when(produtoRepository.save(any(Produto.class))).thenReturn(produtoExistente);
+
+        ProdutoResponseDTO responseDTO = produtoService.reabastecerEstoque(produtoId, quantidadeParaAdicionar);
+
+        assertNotNull(responseDTO);
+
+        assertEquals(25, responseDTO.getQuantidadeEstoque());
+
+        verify(produtoRepository, times(1)).save(produtoExistente);
 
     }
 }
