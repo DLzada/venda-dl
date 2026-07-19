@@ -108,4 +108,20 @@ class ProdutoServiceTest {
         verify(produtoRepository, times(1)).save(produtoExistente);
 
     }
+
+    @Test
+    @DisplayName("Deve lançar BusinessException quando a quantidade para adicionar for menor ou igual a zero")
+    void reabastecerEstoqueCenario2(){
+        Long produtoId = 1L;
+        int quantidadeValida = 0;
+
+        BusinessException exception = assertThrows(BusinessException.class, ()->{
+            produtoService.reabastecerEstoque(produtoId, quantidadeValida);
+        });
+
+        assertEquals("A quantidade para adicionar deve ser maior que zero!", exception.getMessage());
+
+        verify(produtoRepository, never()).findById(anyLong());
+        verify(produtoRepository, never()).save(any(Produto.class));
+    }
 }
