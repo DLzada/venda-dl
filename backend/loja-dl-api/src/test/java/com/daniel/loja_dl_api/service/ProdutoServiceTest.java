@@ -18,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.parameters.P;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -142,5 +143,37 @@ class ProdutoServiceTest {
         assertEquals("Produto não encontrado para reabastecimento...", exception.getMessage());
 
         verify(produtoRepository, never()).save(any(Produto.class));
+    }
+
+    @Test
+    @DisplayName("Deve retornar uma lista de produtos quando buscar por nome válido")
+    void buscarPorNomeCenario1() {
+        String nomeBusca = "Camiseta";
+
+        Categoria categoriaSimulada = new Categoria();
+        categoriaSimulada.setId(1L);
+        categoriaSimulada.setNome("Roupas");
+
+        Produto p1 = new Produto();
+        p1.setId(1L);
+        p1.setNome("Camiseta preta DL");
+        p1.setCategoria(categoriaSimulada);
+
+        Produto p2 = new Produto();
+        p2.setId(2L);
+        p2.setNome("Camiseta branca DL");
+        p2.setCategoria(categoriaSimulada);
+
+        when(produtoRepository.findByNomeContainingIgnoreCase(nomeBusca))
+                .thenReturn(java.util.List.of(p1, p2));
+
+        java.util.List<ProdutoResponseDTO> response = produtoService.buscarPorNome(nomeBusca);
+
+        assertNotNull(response);
+        assertEquals(2, response.size());
+        assertEquals("Camiseta preta DL", response.get(0).getNome());
+        assertEquals("Camiseta branca DL", response.get(1).getNome());
+
+        verify(produtoRepository, times(1)).findByNomeContainingIgnoreCase(nomeBusca);
     }
 }
