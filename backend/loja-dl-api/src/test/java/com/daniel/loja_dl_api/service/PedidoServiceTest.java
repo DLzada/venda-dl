@@ -6,6 +6,7 @@ import com.daniel.loja_dl_api.domain.model.entity.Produto;
 import com.daniel.loja_dl_api.domain.model.enums.StatusPedido;
 import com.daniel.loja_dl_api.domain.repository.PedidoRepository;
 import com.daniel.loja_dl_api.domain.repository.ProdutoRepository;
+import com.daniel.loja_dl_api.infra.exception.BusinessException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -84,5 +85,24 @@ public class PedidoServiceTest {
 
         verify(produtoService, never()).reabastecerEstoque(anyLong(), anyInt());
         verify(pedidoRepository, times(1)).save(pedido);
+    }
+
+    @Test
+    @DisplayName("Deve lançar BusinessException ao tentar cancelar um pedido que já esta pago")
+    void cancelarPedidoCenario2(){
+        Long pedidoId = 3L;
+
+        Pedido pedido = new Pedido();
+        pedido.setId(pedidoId);
+        pedido.setStatus(StatusPedido.PAGO);
+
+        when(pedidoRepository.findById(pedidoId)).thenReturn(Optional.of(pedido));
+
+        assertThrows(com.daniel.loja_dl_api.infra.exception.BusinessException.class, () -> {
+            pedidoService.cancelarPedido(pedidoId);
+        });
+
+        verify(produtoService, never()).reabastecerEstoque(anyLong(), anyInt());
+        verify(pedidoRepository, never()).save(any(Pedido.class));
     }
 }

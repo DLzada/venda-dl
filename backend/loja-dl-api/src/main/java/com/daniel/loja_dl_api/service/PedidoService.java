@@ -246,6 +246,10 @@ public class PedidoService {
             throw new BusinessException("Este pedido já está cancelado.");
         }
 
+        if (pedido.getStatus() == StatusPedido.PAGO) {
+            throw new BusinessException("Não é possível cancelar um pedido que já está pago!");
+        }
+
         for (ItemPedido item : pedido.getItens()) {
             Produto produto = item.getProduto();
 
