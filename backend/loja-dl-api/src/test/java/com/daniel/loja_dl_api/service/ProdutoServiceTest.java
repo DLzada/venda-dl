@@ -15,6 +15,10 @@ import org.junit.platform.engine.discovery.DiscoverySelectorIdentifierParser;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 
 import java.math.BigDecimal;
@@ -175,5 +179,31 @@ class ProdutoServiceTest {
         assertEquals("Camiseta branca DL", response.get(1).getNome());
 
         verify(produtoRepository, times(1)).findByNomeContainingIgnoreCase(nomeBusca);
+    }
+
+    @Test
+    @DisplayName("Deve retornar uma pagina de produtos ao listar com filtros e paginação")
+    void listarComFiltroCenario1(){
+        Pageable pageable = PageRequest.of(0,10);
+
+        Produto p1 = new Produto();
+        p1.setId(1L);
+        p1.setNome("Tênis DL");
+        p1.setPreco(new BigDecimal("199.00"));
+
+        List<Produto> listarProdutos = List.of(p1);
+
+        Page<Produto> paginaSimulada = new PageImpl<>(listarProdutos, pageable, listarProdutos.size());
+
+        when(produtoRepository.findAll(pageable)).thenReturn(paginaSimulada);
+
+        Page<ProdutoResponseDTO> responseDTO = produtoService.listarComFiltros(null, null, pageable);
+
+        assertNotNull(responseDTO);
+        assertEquals(1, responseDTO.getTotalElements());
+        assertEquals(1, responseDTO.getTotalPages());
+        assertEquals("Tênis DL", responseDTO.getContent().get(0).getNome());
+
+        verify(produtoRepository, times(1)).findAll(pageable);
     }
 }
