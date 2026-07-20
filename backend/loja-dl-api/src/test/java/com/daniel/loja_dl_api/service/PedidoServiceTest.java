@@ -65,4 +65,24 @@ public class PedidoServiceTest {
         verify(produtoRepository, times(1)).save(any(Produto.class));
         verify(pedidoRepository, times(1)).save(pedido);
     }
+
+    @Test
+    @DisplayName("Deve mudar o status do pedido para PAGO quando o Webhook receber a confirmação")
+    void confirmarPagamentoCenario1(){
+        Long pedidoId = 2L;
+
+        Pedido pedido = new Pedido();
+        pedido.setId(pedidoId);
+        pedido.setStatus(StatusPedido.AGUARDANDO_PAGAMENTO);
+
+        when(pedidoRepository.findById(pedidoId)).thenReturn(Optional.of(pedido));
+        when(pedidoRepository.save(any(Pedido.class))).thenReturn(pedido);
+
+        pedidoService.processarPagamento(pedidoId);
+
+        assertEquals(StatusPedido.PAGO, pedido.getStatus());
+
+        verify(produtoService, never()).reabastecerEstoque(anyLong(), anyInt());
+        verify(pedidoRepository, times(1)).save(pedido);
+    }
 }
