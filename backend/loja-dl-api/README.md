@@ -35,3 +35,14 @@ Abaixo estão listados todos os recursos mapeados automaticamente pela interface
 *   `GET /api/auth/me` — Recupera os detalhes básicos de autenticação do usuário logado.
 *   `GET /api/usuarios/me` — Retorna os dados completos do perfil do usuário logado.
 *   `PUT /api/usuarios/me` — Atualiza as informações cadastrais do perfil do usuário.
+
+### Catálogo (`produto-controller` & `categoria-controller`)
+*   `GET /api/produtos` — Listagem paginada de todos os produtos cadastrados.
+*   `POST /api/produtos` — Criação de um novo produto (Privado/Admin).
+*   `GET /api/produtos/buscar` — Mecanismo de busca textual e filtros de produtos.
+*   `GET /api/produtos/filtrar-categoria` — Filtra produtos com base em uma categoria específica.
+*   `PUT /api/produtos/{id}/reabastecer` — Atualiza e adiciona unidades ao estoque do produto.
+*   `GET /api/categorias` — Listagem de todas as categorias de produtos disponíveis.
+*   `POST /api/categorias` — Criação de novas categorias no catálogo.
+*   `PUT /api/categorias/{id}` — Edição e atualização de dados de uma categoria existente.
+*   `DELETE /api/categorias/{id}` — Exclusão permanente de uma categoria.
