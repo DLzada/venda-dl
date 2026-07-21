@@ -46,3 +46,15 @@ Abaixo estão listados todos os recursos mapeados automaticamente pela interface
 *   `POST /api/categorias` — Criação de novas categorias no catálogo.
 *   `PUT /api/categorias/{id}` — Edição e atualização de dados de uma categoria existente.
 *   `DELETE /api/categorias/{id}` — Exclusão permanente de uma categoria.
+
+### Vendas (`carrinho-controller` & `pedido-controller`)
+*   `GET /api/carrinho` — Exibe os itens atualmente presentes no carrinho do usuário.
+*   `POST /api/carrinho/adicionar` — Adiciona um determinado produto e quantidade ao carrinho.
+*   `DELETE /api/carrinho/remover/{produtoId}` — Remove um item específico do carrinho.
+*   `POST /api/pedidos/checkout` — Converte o carrinho atual em um Pedido definitivo, reservando o estoque.
+*   `GET /api/pedidos` — Listagem geral de pedidos cadastrados.
+*   `GET /api/pedidos/{id}` — Recupera os detalhes completos de um pedido pelo seu identificador.
+*   `GET /api/pedidos/meus-pedidos` — Retorna apenas o histórico de pedidos do cliente autenticado.
+*   `POST /api/pedidos/{id}/pagar` — Aciona a simulação ou fluxo direto de pagamento do pedido.
+*   `PUT /api/pedidos/{id}/cancelar` — Realiza o cancelamento manual/sistêmico devolvendo os itens ao estoque.
+*   `PUT /api/pedidos/{id}/status` — Atualização direta de estado interna do status do pedido.
