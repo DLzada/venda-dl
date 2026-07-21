@@ -58,3 +58,17 @@ Abaixo estão listados todos os recursos mapeados automaticamente pela interface
 *   `POST /api/pedidos/{id}/pagar` — Aciona a simulação ou fluxo direto de pagamento do pedido.
 *   `PUT /api/pedidos/{id}/cancelar` — Realiza o cancelamento manual/sistêmico devolvendo os itens ao estoque.
 *   `PUT /api/pedidos/{id}/status` — Atualização direta de estado interna do status do pedido.
+
+### Integrações Externas (`webhook-controller`)
+*   `POST /api/public/webhook/abacatePay` — Endpoint público que recebe os eventos assíncronos de confirmação de transações.
+
+### Benefícios & Preferências (`cupom-controller` & `favorito-controller`)
+*   `GET /api/cupons` — Listagem de cupons ativos no sistema.
+*   `POST /api/cupons` — Criação de novos cupons de descontos para campanhas.
+*   `GET /api/favoritos` — Lista todos os produtos favoritados pelo usuário autenticado.
+*   `POST /api/favoritos/{produtoId}` — Adiciona um produto à lista de desejos/favoritos.
+*   `DELETE /api/favoritos/{produtoId}` — Remove um produto da lista de favoritos.
+
+### Inteligência de Negócio (`dashboard-controller`)
+*   `GET /api/dashboard/resumo` — Consolida dados gerais financeiros e estatísticas de vendas do e-commerce.
+*   `GET /api/dashboard/alertas-estoque` — Relatório preventivo exibindo produtos que atingiram nível crítico de estoque baixo.
