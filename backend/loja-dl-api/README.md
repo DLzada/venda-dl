@@ -9,3 +9,11 @@
 Uma API RESTful completa e robusta desenvolvida para gerenciar os ecossistemas de e-commerce. O projeto conta com autenticação segura, rotinas automatizadas em segundo plano, integrações com gateways de pagamento via Webhooks e uma cobertura rigorosa de testes unitários.
 
 ---
+
+## Principais Funcionalidades & Regras de Negócio
+
+A API foi desenhada seguindo as melhores práticas de desenvolvimento de software e os princípios **RESTful**, entregando as seguintes regras:
+
+*   **Segurança & Autenticação (JWT):** Gerenciamento completo de usuários com cadastro, login e obtenção de dados do perfil autenticado (`/me`), protegendo rotas críticas com tokens JWT dinâmicos.
+*   **Carrinho de Compras:** Adição, visualização e remoção de itens vinculados ao contexto do usuário logado antes do fechamento do pedido.
+*   **Gestão Avançada de Produtos & Estoque:** Operações de busca textual customizada, filtros refinados por categoria com suporte a paginação de alto desempenho (`Pageable`). Possui controle ativo de reabastecimento.
