@@ -12,7 +12,7 @@ Uma API RESTful completa e robusta desenvolvida para gerenciar os ecossistemas d
 
 ##  Tecnologias Utilizadas
 
-*   **Linguagem:** Java 17 (Versão estável LTS com suporte avançado a Records e melhorias de performance)
+*   **Linguagem:** Java 17
 *   **Framework Principal:** Spring Boot 3.5.15 (Spring Web, Spring Data JPA, Spring Security)
 *   **Banco de Dados:** PostgreSQL (Persistência relacional robusta)
 *   **Segurança:** JWT (JSON Web Tokens) para controle Stateless
@@ -83,3 +83,59 @@ Abaixo estão listados todos os recursos mapeados automaticamente pela interface
 ### Inteligência de Negócio (`dashboard-controller`)
 *   `GET /api/dashboard/resumo` — Consolida dados gerais financeiros e estatísticas de vendas do e-commerce.
 *   `GET /api/dashboard/alertas-estoque` — Relatório preventivo exibindo produtos que atingiram nível crítico de estoque baixo.
+
+---
+
+##  Como Rodar os Testes Unitários
+
+Para garantir que nenhuma regra de negócio foi quebrada após alterações, execute a bateria de testes direto pelo terminal ou pela sua IDE:
+
+```bash
+mvn test
+```
+---
+
+## Como Executar o Projeto
+
+### 1. Pré-requisitos
+*   Java 17 instalado.
+*   Banco de dados PostgreSQL ativo.
+
+### 2. Variáveis de Ambiente (`Environment Variables`)
+Para que a aplicação funcione corretamente, você precisa configurar as seguintes variáveis de ambiente no seu sistema ou na sua IDE antes de dar o boot:
+
+```env
+# Banco de Dados
+DB_URL=jdbc:postgresql://localhost:5432/nome_do_seu_banco
+DB_USER=seu_usuario_do_banco
+DB_PASSWORD=sua_senha_do_banco
+
+# Segurança & Autenticação
+JWT_KEY=sua_chave_secreta_para_geracao_dos_tokens_jwt
+ADMIN_USER=usuario_administrador_padrao
+ADMIN_PASSWORD=senha_do_administrador_padrao
+
+# Integrações Externas
+ABACATE_PAY_TOKEN=seu_token_de_autenticacao_do_abacate_pay
+```
+
+### 3. Passos para Execução
+* **3.1 -  Clone o repositório:**
+```bash
+git clone [https://github.com/Dlzada/venda-dl.git](https://github.com/DLzada/venda-dl.git)
+```
+
+* 3.2 - Certifique-se de que todas as Variáveis de Ambiente listadas acima foram injetadas no seu ambiente de execução.
+
+
+* 3.3 -  **Execute a aplicação via Maven ou pela sua IDE:**
+```bash
+mvn spring-boot:run
+```
+
+* 3.4- **Acesse a documentação interativa das rotas no navegador:**
+```plaintext
+http://localhost:8080/swagger-ui/index.html
+```
+
+Desenvolvido com ☕, foco em alta performance e feito por **Daniel(DL)**.
