@@ -10,6 +10,17 @@ Uma API RESTful completa e robusta desenvolvida para gerenciar os ecossistemas d
 
 ---
 
+##  Tecnologias Utilizadas
+
+*   **Linguagem:** Java 17 (Versão estável LTS com suporte avançado a Records e melhorias de performance)
+*   **Framework Principal:** Spring Boot 3.5.15 (Spring Web, Spring Data JPA, Spring Security)
+*   **Banco de Dados:** PostgreSQL (Persistência relacional robusta)
+*   **Segurança:** JWT (JSON Web Tokens) para controle Stateless
+*   **Testes:** JUnit 5 e Mockito
+*   **Documentação:** Springdoc OpenAPI UI (Swagger)
+
+---
+
 ## Principais Funcionalidades & Regras de Negócio
 
 A API foi desenhada seguindo as melhores práticas de desenvolvimento de software e os princípios **RESTful**, entregando as seguintes regras:
