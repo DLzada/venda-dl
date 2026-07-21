@@ -20,3 +20,5 @@ A API foi desenhada seguindo as melhores práticas de desenvolvimento de softwar
 * **Ciclo de Vida do Pedido (Checkout & Webhooks):** Processo completo de checkout, pagamento simulado, cancelamento de pedidos e atualização de status automática via Webhook integrado ao **Abacate Pay**.
 * **Cupons & Favoritos:** Sistema integrado para criação e listagem de cupons de desconto, além de um módulo completo de gerenciamento de produtos favoritos por usuário.
 * **Dashboard Administrativo:** Central de inteligência do e-commerce com endpoints dedicados para emitir resumos gerais de vendas financeiras e alertas inteligentes de produtos com estoque baixo.
+* ** Agendamento Automatizado (`@Scheduled`):** Rotina assíncrona rodando em segundo plano que identifica pedidos não pagos dentro do prazo de expiração, executa o cancelamento automático e faz a recomposição imediata do estoque dos produtos.
+* **Testes Unitários Cobertos (Mockito & JUnit 5):** Bateria rigorosa de testes cobrindo fluxos de sucesso, tratamento de exceções customizadas (`BusinessException`) e paginação nas regras de negócio do `ProdutoService` e `PedidoService`.
