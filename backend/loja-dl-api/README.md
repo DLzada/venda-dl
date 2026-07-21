@@ -5,3 +5,7 @@
 [![Security](https://img.shields.io/badge/Security-JWT-blue)](https://jwt.io/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue?logo=postgresql)](https://www.postgresql.org/)
 [![Mockito](https://img.shields.io/badge/Tests-Mockito%20%26%20JUnit5-green?logo=junit5)](https://site.mockito.org/)
+
+Uma API RESTful completa e robusta desenvolvida para gerenciar os ecossistemas de e-commerce. O projeto conta com autenticação segura, rotinas automatizadas em segundo plano, integrações com gateways de pagamento via Webhooks e uma cobertura rigorosa de testes unitários.
+
+---
