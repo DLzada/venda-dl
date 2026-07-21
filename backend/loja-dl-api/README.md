@@ -20,5 +20,18 @@ A API foi desenhada seguindo as melhores práticas de desenvolvimento de softwar
 * **Ciclo de Vida do Pedido (Checkout & Webhooks):** Processo completo de checkout, pagamento simulado, cancelamento de pedidos e atualização de status automática via Webhook integrado ao **Abacate Pay**.
 * **Cupons & Favoritos:** Sistema integrado para criação e listagem de cupons de desconto, além de um módulo completo de gerenciamento de produtos favoritos por usuário.
 * **Dashboard Administrativo:** Central de inteligência do e-commerce com endpoints dedicados para emitir resumos gerais de vendas financeiras e alertas inteligentes de produtos com estoque baixo.
-* ** Agendamento Automatizado (`@Scheduled`):** Rotina assíncrona rodando em segundo plano que identifica pedidos não pagos dentro do prazo de expiração, executa o cancelamento automático e faz a recomposição imediata do estoque dos produtos.
+* **Agendamento Automatizado (`@Scheduled`):** Rotina assíncrona rodando em segundo plano que identifica pedidos não pagos dentro do prazo de expiração, executa o cancelamento automático e faz a recomposição imediata do estoque dos produtos.
 * **Testes Unitários Cobertos (Mockito & JUnit 5):** Bateria rigorosa de testes cobrindo fluxos de sucesso, tratamento de exceções customizadas (`BusinessException`) e paginação nas regras de negócio do `ProdutoService` e `PedidoService`.
+
+---
+
+## Estrutura de Endpoints (Mapeamento Completo API RESTful)
+
+Abaixo estão listados todos os recursos mapeados automaticamente pela interface do Swagger:
+
+### Autenticação & Usuários (`autenticacao-controller` & `usuario-controller`)
+*   `POST /api/auth/cadastro` — Cadastro de novos usuários no ecossistema.
+*   `POST /api/auth/login` — Autenticação de credenciais com geração de token JWT.
+*   `GET /api/auth/me` — Recupera os detalhes básicos de autenticação do usuário logado.
+*   `GET /api/usuarios/me` — Retorna os dados completos do perfil do usuário logado.
+*   `PUT /api/usuarios/me` — Atualiza as informações cadastrais do perfil do usuário.
