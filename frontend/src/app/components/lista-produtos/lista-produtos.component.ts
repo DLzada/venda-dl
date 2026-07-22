@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Produto } from '../../models/produto.model';
+import { ProdutoService } from '../../services/produto.service';
 
 @Component({
   selector: 'app-lista-produtos',
@@ -10,24 +11,24 @@ import { Produto } from '../../models/produto.model';
   styleUrl: './lista-produtos.component.css'
 })
 export class ListaProdutosComponent {
-  produtos: Produto[] = [
-    {
-      id: 1,
-      nome: "Teclado mecanico RGB",
-      descricao: "Teclado com switch blue",
-      preco: 299.90,
-      quantidadeEstoque: 15,
-      categoria: {id:1, nome: "Periféricos"}
-    },
-    {
-      id: 2,
-      nome: 'Mouse Gamer Pro',
-      descricao: 'Mouse sem fio com sensor de alta precisão Pixart',
-      preco: 199.00,
-      quantidadeEstoque: 5,
-      categoria: { id: 1, nome: 'Periféricos' }
-    }
-  ];
+  produtos: Produto[] = [];
+
+  constructor(private produtoService: ProdutoService){}
+
+  ngOnInit(): void{
+    this.carregarProdutos();
+  }
+
+  carregarProdutos(): void{
+    this.produtoService.listarTodos().subscribe({
+      next: (dados) => {
+        this.produtos = dados;
+      },
+      error: (erro) =>{
+        console.error('Erro ao buscar produtos da API', erro)
+      }
+    })
+  }
 
   comprarProduto(produto:Produto){
     alert(`Voce adicionou ${produto.nome} ao carrinho!`)
