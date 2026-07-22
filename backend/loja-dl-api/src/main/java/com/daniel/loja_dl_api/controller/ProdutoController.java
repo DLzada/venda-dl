@@ -16,6 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import java.math.BigDecimal;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/produtos")
 @RequiredArgsConstructor
